@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# Kilocal
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Loggue moins, apprends plus. 🥬
 
-## Get started
+Kilocal is a Duolingo-inspired calorie tracking app — chunky tiles, daily quests, streaks, and badges. Built with Expo + React Native + TypeScript.
 
-1. Install dependencies
+## Stack
 
-   ```bash
-   npm install
-   ```
+- **Expo SDK 54** + **Expo Router** (file-based routing)
+- **TypeScript** (strict mode)
+- **react-native-svg** for vector icons and charts
+- **expo-linear-gradient** for hero gradients
+- **@expo-google-fonts/nunito** + **@expo-google-fonts/fraunces** for typography
+- **react-native-reanimated** for animations
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Getting started
 
 ```bash
-npm run reset-project
+npm install
+npm run ios       # iOS simulator
+npm run android   # Android emulator
+npm run web       # web preview
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Project structure
 
-## Learn more
+```
+app/                          # Expo Router (file-based)
+  _layout.tsx                 # Root: fonts, theme provider, stack
+  (tabs)/                     # Tab group with shared header + drawer
+    _layout.tsx               # Custom tab bar (5 tabs)
+    index.tsx                 # Aujourd'hui (Home)
+    calendar.tsx
+    insights.tsx
+    achievements.tsx
+    profile.tsx
+  onboarding.tsx              # Modal-presented 4-step onboarding
 
-To learn more about developing your project with Expo, look at the following resources:
+src/
+  theme/
+    colors.ts                 # Color palette + accent presets
+    ThemeContext.tsx          # Dark mode, accent, density, mascot toggles
+  data/
+    mock.ts                   # Mock weeks, months, badges, quests, charts
+  components/                 # Design-system primitives
+    Chunky.tsx                # 3D button (Duolingo-style depth)
+    DayPill.tsx               # Day status pill (hit/miss/today/future)
+    Card.tsx
+    Eyebrow.tsx               # Small caps gray label
+    Wordmark.tsx              # Leaf logo + "Kilocal" wordmark
+    AppHeader.tsx
+    XPBar.tsx
+    TabPills.tsx
+    Mascot.tsx                # Optional seedling mascot with personalities
+    icons/index.tsx           # All inline SVG icons
+  screens/
+    HomeScreen.tsx
+    InsightsScreen.tsx        # SVG weight + deficit charts
+    CalendarScreen.tsx
+    AchievementsScreen.tsx
+    ProfileScreen.tsx
+    OnboardingScreen.tsx
+    Drawer.tsx                # Slide-in nav drawer
+    Celebration.tsx           # Confetti modal
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Design system
 
-## Join the community
+The visual language follows the chunky / tactile Duolingo school:
 
-Join our community of developers creating universal apps.
+- **Primary green** `#4ECB1F` for "hits" and progress
+- **Orange** `#FF9416` for energy / XP / misses
+- **Blue** `#14C0F5` for CTAs and analytics
+- **Red** `#FF4945` for today / urgency
+- **Solid color top + darker bottom edge** depth, achieved via stacked Views
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Four selectable accent presets (Classique, Agrumes, Myrtille, Matcha) live in `src/theme/colors.ts`.
+
+## Acknowledgements
+
+Visual design from a Claude Design handoff bundle. UI rebuilt for native via React Native + react-native-svg.
