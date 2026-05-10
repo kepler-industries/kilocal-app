@@ -23,6 +23,14 @@ FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
+# openssl + ca-certificates: Prisma's query engine needs libssl at runtime
+# and falls back to a wrong binary if the package isn't present.
+# curl: Coolify's in-container healthcheck probe runs `curl` against /health;
+# without it the container is marked unhealthy and rolled back.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends openssl ca-certificates curl \
+  && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
