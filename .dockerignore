@@ -1,0 +1,21 @@
+# Mobile app build context — not part of the backend image
+node_modules
+.expo
+ios
+android
+web-build
+dist
+build
+*.log
+.DS_Store
+.git
+.github
+.vscode
+.idea
+
+# Backend artifacts that must not be copied in
+server/node_modules
+server/dist
+server/.env
+server/.env.local
+server/.env.*.local
