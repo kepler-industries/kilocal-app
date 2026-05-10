@@ -12,7 +12,11 @@ When the backend is started, use:
 
 - **Runtime:** Node.js
 - **Framework:** [Hono](https://hono.dev) — chosen because it's tiny (~14 kB), Web-Standards based, TypeScript-first, and the simplest option for a small REST API. Runs on plain Node via `@hono/node-server`.
+- **Database / ORM:** [Prisma](https://www.prisma.io) — the **legacy / classic** Prisma ORM (Rust query engine), **not** Prisma Accelerate, Data Platform, or any edge-only runtime. The app talks to a **self-hosted database server** (Postgres) over a normal connection string; we own the DB, we run the migrations.
+- **Authentication:** [Better-Auth](https://better-auth.com/docs/introduction) — TypeScript-first auth library. Plugs into the Prisma adapter and exposes its handlers via Hono routes. Sessions/users live in our own Postgres, alongside app data.
 - **Deployment:** Dockerfile in this folder. The mobile app is not deployed here; it's built and shipped to the app stores separately.
+
+The DB server itself (Postgres container, managed instance, whatever) is **separate from this image** — `server/`'s container only runs the Node/Hono process and connects out via `DATABASE_URL`.
 
 ## Conventions when implementing
 
