@@ -10,8 +10,10 @@
 FROM node:22-bookworm-slim AS build
 WORKDIR /app
 
+# `--include=dev` is defensive: Coolify can inject NODE_ENV=production into
+# the build, which would otherwise make npm skip devDependencies (tsx, tsc).
 COPY server/package.json server/package-lock.json* ./
-RUN npm install --no-audit --no-fund
+RUN npm install --include=dev --no-audit --no-fund
 
 COPY server/tsconfig.json ./
 COPY server/prisma ./prisma
