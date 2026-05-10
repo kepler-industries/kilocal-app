@@ -40,10 +40,6 @@ COPY --from=build /app/package.json ./package.json
 
 EXPOSE 3000
 
-# Apply pending migrations on boot. The `migrate resolve --rolled-back`
-# is a one-shot recovery for the very first deploy where the init
-# migration was committed with a corrupted SQL trailer that left
-# `_prisma_migrations` marked failed. After it succeeds once, both the
-# resolve and deploy commands become no-ops on subsequent boots
-# (resolve errors out for missing migrations, swallowed by `|| true`).
-CMD ["sh", "-c", "npx prisma migrate resolve --rolled-back 20260510193906_init || true; npx prisma migrate deploy || true; node dist/index.js"]
+# Apply pending migrations on boot. `|| true` keeps the container alive
+# even if migrations fail, so `/` and `/health` stay diagnosable.
+CMD ["sh", "-c", "npx prisma migrate deploy || true; node dist/index.js"]
