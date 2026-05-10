@@ -1,0 +1,4 @@
+# Please do not edit this manually. It is required by Prisma to identify the
+# database provider for migrations and avoid mismatches between environments.
+
+provider = "postgresql"
