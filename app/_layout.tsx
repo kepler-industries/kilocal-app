@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text } from 'react-native';
+import { ActivityIndicator, View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   useFonts,
@@ -14,6 +14,7 @@ import 'react-native-reanimated';
 
 import { ThemeProvider, useTheme } from '@/src/theme/ThemeContext';
 import { KCColors } from '@/src/theme/colors';
+import { useSession } from '@/src/lib/auth-client';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -48,11 +49,35 @@ export default function RootLayout() {
 
 function RootStack() {
   const { dark } = useTheme();
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: dark ? KCColors.darkBg : '#fff',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <ActivityIndicator color={KCColors.green} />
+      </View>
+    );
+  }
+
+  const signedIn = !!session;
+
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="onboarding" options={{ presentation: 'modal' }} />
+        <Stack.Protected guard={signedIn}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="onboarding" options={{ presentation: 'modal' }} />
+        </Stack.Protected>
+        <Stack.Protected guard={!signedIn}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
       </Stack>
       <StatusBar style={dark ? 'light' : 'dark'} />
     </>

@@ -4,6 +4,7 @@ import { AppHeader } from '../components/AppHeader';
 import { FlameIcon, CalIcon, BarsIcon, TrophyIcon, UserIcon2, LogoutIcon } from '../components/icons';
 import { KCColors } from '../theme/colors';
 import { useTheme } from '../theme/ThemeContext';
+import { authClient, useSession } from '../lib/auth-client';
 
 export type DrawerRoute = 'home' | 'calendar' | 'insights' | 'achievements' | 'profile';
 
@@ -19,9 +20,14 @@ export function Drawer({
   onNav: (id: DrawerRoute) => void;
 }) {
   const { dark } = useTheme();
+  const { data: session } = useSession();
+  const user = session?.user;
   const slide = useRef(new Animated.Value(0)).current;
   const screenW = Dimensions.get('window').width;
   const drawerW = screenW * 0.88;
+
+  const displayName = user?.name?.trim() || user?.email?.split('@')[0] || 'Toi';
+  const initial = displayName.charAt(0).toUpperCase();
 
   useEffect(() => {
     if (open) {
@@ -102,7 +108,7 @@ export function Drawer({
                       fontWeight: '900',
                     }}
                   >
-                    A
+                    {initial}
                   </Text>
                 </View>
                 <View>
@@ -114,18 +120,20 @@ export function Drawer({
                       color: dark ? KCColors.darkText : KCColors.ink,
                     }}
                   >
-                    Alexandre
+                    {displayName}
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontFamily: 'Nunito_700Bold',
-                      fontWeight: '700',
-                      color: dark ? KCColors.darkSub : '#9AA0AC',
-                    }}
-                  >
-                    a.legal.contact@gmail.com
-                  </Text>
+                  {user?.email && (
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: 'Nunito_700Bold',
+                        fontWeight: '700',
+                        color: dark ? KCColors.darkSub : '#9AA0AC',
+                      }}
+                    >
+                      {user.email}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -188,6 +196,10 @@ export function Drawer({
               })}
 
               <Pressable
+                onPress={async () => {
+                  onClose();
+                  await authClient.signOut();
+                }}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',

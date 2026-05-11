@@ -10,7 +10,8 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kepler.kilocal"
+      "bundleIdentifier": "com.kepler.kilocal",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -41,7 +42,9 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-secure-store",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -10,9 +10,15 @@ import { FlameIcon, ScaleIcon, CheckIcon } from '../components/icons';
 import { KCColors } from '../theme/colors';
 import { KCWeek, KCQuests, type Quest } from '../data/mock';
 import { useTheme } from '../theme/ThemeContext';
+import { useSession } from '../lib/auth-client';
 
 export function HomeScreen({ onCelebrate }: { onCelebrate?: (q: Quest) => void }) {
   const { accent, dark, density, mascotOn, personality } = useTheme();
+  const { data: session } = useSession();
+  const firstName =
+    session?.user?.name?.trim().split(/\s+/)[0] ||
+    session?.user?.email?.split('@')[0] ||
+    'toi';
   const pad = density === 'cozy' ? 14 : 18;
   const gap = density === 'cozy' ? 12 : 16;
 
@@ -103,7 +109,7 @@ export function HomeScreen({ onCelebrate }: { onCelebrate?: (q: Quest) => void }
                   lineHeight: 19,
                 }}
               >
-                Salut <Text style={{ fontFamily: 'Nunito_900Black', fontWeight: '900' }}>Alex</Text>
+                Salut <Text style={{ fontFamily: 'Nunito_900Black', fontWeight: '900' }}>{firstName}</Text>
                 {' '}! Reste deux quêtes — on file ?
               </Text>
             }

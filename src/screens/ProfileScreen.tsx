@@ -6,9 +6,23 @@ import { XPBar } from '../components/XPBar';
 import { UserIcon, TargetIcon, PencilIcon } from '../components/icons';
 import { KCColors } from '../theme/colors';
 import { useTheme } from '../theme/ThemeContext';
+import { useSession } from '../lib/auth-client';
+
+const MONTHS_FR = [
+  'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+  'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+];
 
 export function ProfileScreen() {
   const { dark } = useTheme();
+  const { data: session } = useSession();
+  const user = session?.user;
+  const displayName = user?.name?.trim() || user?.email?.split('@')[0] || 'Toi';
+  const initial = displayName.charAt(0).toUpperCase();
+  const createdAt = user?.createdAt ? new Date(user.createdAt) : null;
+  const memberSince = createdAt
+    ? `${MONTHS_FR[createdAt.getMonth()]} ${createdAt.getFullYear()}`
+    : null;
 
   return (
     <ScrollView
@@ -92,7 +106,7 @@ export function ProfileScreen() {
                   fontWeight: '900',
                 }}
               >
-                A
+                {initial}
               </Text>
             </View>
             <View>
@@ -105,29 +119,33 @@ export function ProfileScreen() {
                   letterSpacing: -0.3,
                 }}
               >
-                Alexandre
+                {displayName}
               </Text>
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontFamily: 'Nunito_700Bold',
-                  fontWeight: '700',
-                  color: dark ? KCColors.darkSub : '#9AA0AC',
-                }}
-              >
-                a.legal.contact@gmail.com
-              </Text>
-              <Text
-                style={{
-                  fontSize: 11,
-                  fontFamily: 'Nunito_700Bold',
-                  fontWeight: '700',
-                  color: dark ? KCColors.darkSub : '#B5B5B5',
-                  marginTop: 2,
-                }}
-              >
-                Membre depuis avril 2026
-              </Text>
+              {user?.email && (
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Nunito_700Bold',
+                    fontWeight: '700',
+                    color: dark ? KCColors.darkSub : '#9AA0AC',
+                  }}
+                >
+                  {user.email}
+                </Text>
+              )}
+              {memberSince && (
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontFamily: 'Nunito_700Bold',
+                    fontWeight: '700',
+                    color: dark ? KCColors.darkSub : '#B5B5B5',
+                    marginTop: 2,
+                  }}
+                >
+                  Membre depuis {memberSince}
+                </Text>
+              )}
             </View>
           </View>
 

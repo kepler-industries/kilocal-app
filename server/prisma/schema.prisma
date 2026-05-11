@@ -14,13 +14,15 @@ datasource db {
 // adapters/prisma). Add app-specific models alongside, not inside, these.
 
 model User {
-  id            String    @id
-  name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
+  id            String   @id
+  // Nullable because email-OTP first-time sign-up doesn't supply a name —
+  // Apple/social and onboarding fill it in later.
+  name          String?
+  email         String   @unique
+  emailVerified Boolean  @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   sessions Session[]
   accounts Account[]
